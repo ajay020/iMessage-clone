@@ -1,16 +1,30 @@
 import { useEffect, useState } from "react";
-import { Avatar, IconButton } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
-import RateReviewOutlinedIcon from "@material-ui/icons/RateReviewOutlined";
+
 import SidebarChat from "../sidebarchat/SidebarChat";
-import db, { auth } from "../../firebase";
-import { useSelector } from "react-redux";
-import { selectUser } from "../../features/userSlice";
+import db from "../../firebase";
 import "./sidebar.css";
+import SidebarHeader from "../sidebarHeader/SidebarHeader";
 
 const Sidebar = () => {
-  const user = useSelector(selectUser);
   const [chats, setChats] = useState([]);
+  const [searchString, setSearchString] = useState("");
+
+  const searchGroup = (groupName) => {
+    setSearchString(groupName);
+  };
+
+  let filteredGroup;
+
+  if (searchString) {
+    filteredGroup = chats.map(({ id, data: { chatName } }) => {
+      if (chatName.toLowerCase().includes(searchString.toLocaleLowerCase())) {
+        return <SidebarChat key={id} id={id} chatName={chatName} />;
+      }
+    });
+  }
+  const allGroups = chats.map(({ id, data: { chatName } }) => (
+    <SidebarChat key={id} id={id} chatName={chatName} />
+  ));
 
   useEffect(() => {
     db.collection("chats").onSnapshot((snapshot) => {
@@ -23,35 +37,11 @@ const Sidebar = () => {
     });
   }, []);
 
-  const addChatName = () => {
-    const chatName = prompt("Enter a chat name");
-    if (chatName) {
-      db.collection("chats").add({
-        chatName: chatName,
-      });
-    }
-  };
-
   return (
     <div className="sidebar">
-      <div className="sidebar__header">
-        <Avatar
-          onClick={() => auth.signOut()}
-          src={user.photo}
-          className="avatar"
-        />
-        <div className="sidebar__input">
-          <SearchIcon />
-          <input className="" type="text" placeholder="Search..." />
-        </div>
-        <IconButton onClick={addChatName}>
-          <RateReviewOutlinedIcon />
-        </IconButton>
-      </div>
+      <SidebarHeader searchGroup={searchGroup} />
       <div className="sidebar__chats">
-        {chats.map(({ id, data: { chatName } }) => (
-          <SidebarChat key={id} id={id} chatName={chatName} />
-        ))}
+        {filteredGroup ? filteredGroup : allGroups}
       </div>
     </div>
   );
