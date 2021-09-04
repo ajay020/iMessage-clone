@@ -1,0 +1,41 @@
+.sidebar {
+  flex: 30%;
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+  height: 100vh;
+  border-right: 1px solid gray;
+}
+.avatar {
+  margin-right: 15px;
+  cursor: pointer;
+}
+.sidebar__header {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  height: 50px;
+}
+
+.sidebar__input {
+  display: flex;
+  align-items: center;
+  background: #ccc;
+  padding: 2px 2px;
+  border-radius: 12px;
+}
+
+.sidebar__input > input {
+  padding: 2px 4px;
+  border: none;
+  background: #ccc;
+  outline-width: 0;
+}
+
+.sidebar__chats {
+  overflow: scroll;
+}
+
+.sidebar__chats::-webkit-scrollbar {
+  display: none;
+}
