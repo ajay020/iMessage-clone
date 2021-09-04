@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
 
 import "./sidebarHeader.css";
-// import { useState } from "react";
 
 const SidebarHeader = ({ searchGroup }) => {
   const user = useSelector(selectUser);
